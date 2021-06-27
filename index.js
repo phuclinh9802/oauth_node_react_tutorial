@@ -13,6 +13,8 @@ const session = require('express-session');
 const passport = require('passport');
 var userProfile;
 
+const dotenv = require('dotenv').config();
+
 app.set('view engine', 'ejs');
 
 app.use(passport.initialize());
@@ -21,36 +23,42 @@ app.use(passport.session());
 app.use(session({
     resave: false,
     saveUninitialized: true,
-    secret: 'SECRET'
+    secret: 'SECRET',
+    cookie: {
+        secure: true
+    }
 }));
 
 app.get('/', function (req, res) {
     res.render('pages/auth');
 });
-app.get('/success', (req, res) => res.send(userProfile));
+
+app.set('view engine', 'ejs');
+// app.get('/success', (req, res) => res.send(userProfile.id));
+app.get('/success', (req, res) => res.render('pages/success', { user: userProfile }));
 app.get('/error', (req, res) => res.send('error logging in'));
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log('App listening on port ' + port));
 
 passport.serializeUser(function (user, cb) {
-    cb(null, user);
+    return cb(null, user);
 });
 
 passport.deserializeUser(function (obj, cb) {
-    cb(null, obj)
+    return cb(null, obj)
 })
 
 // Google Authentication
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 // Google ID
-const GOOGLE_CLIENT_ID = 'our-google-client-id';
+const GOOGLE_CLIENT_ID = '597837144580-s70kcs34078lia98907thsuhuj2g16c4.apps.googleusercontent.com';
 // Google Secret
-const GOOGLE_CLIENT_SECRET = 'our-google-client-secret';
+const GOOGLE_CLIENT_SECRET = 'eSJeMyM5eeCGjBmyHWcIl9KR';
 passport.use(new GoogleStrategy({
-    cliendID: GOOGLE_CLIENT_ID,
+    clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhosat:3000/auth/google/callback"
+    callbackURL: "http://localhost:3000/auth/google/callback"
 },
     function (accessToken, refreshToken, profile, done) {
         userProfile = profile;
