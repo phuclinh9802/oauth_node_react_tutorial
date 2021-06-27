@@ -1,0 +1,26 @@
+{
+  "name": "oauth_node_react_tutorial",
+  "version": "1.0.0",
+  "description": "Integrating social media's login to user's website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phuclinh9802/oauth_node_react_tutorial.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/phuclinh9802/oauth_node_react_tutorial/issues"
+  },
+  "homepage": "https://github.com/phuclinh9802/oauth_node_react_tutorial#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "passport": "^0.4.1",
+    "passport-google-oauth": "^2.0.0"
+  }
+}
