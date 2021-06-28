@@ -12,6 +12,7 @@ const session = require('express-session');
 // set up passport
 const passport = require('passport');
 var userProfile;
+var title;
 
 const dotenv = require('dotenv').config();
 
@@ -34,7 +35,7 @@ app.get('/', function (req, res) {
 });
 
 app.set('view engine', 'ejs');
-// app.get('/success', (req, res) => res.send(userProfile.id));
+// app.get('/success', (req, res) => res.send(userProfile));
 app.get('/success', (req, res) => res.render('pages/success', { user: userProfile }));
 app.get('/error', (req, res) => res.send('error logging in'));
 
@@ -62,6 +63,7 @@ passport.use(new GoogleStrategy({
 },
     function (accessToken, refreshToken, profile, done) {
         userProfile = profile;
+        title = 'Google';
         return done(null, userProfile);
     }
 ));
@@ -80,3 +82,32 @@ app.get('/auth/google/callback',
 )
 
 
+// Facebook Authentication
+const FaceBookStrategy = require('passport-facebook').Strategy;
+// Facebook ID
+const FACEBOOK_APP_ID = '529163718211919';
+// Facebook Secret
+const FACEBOOK_APP_SECRET = 'b9b53735a5ba5ef65dfc836d28787c6c';
+// Configuration
+passport.use(new FaceBookStrategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:3000/auth/facebook/callback"
+},
+    function (accessToken, refreshToken, profile, cb) {
+        userProfile = profile;
+        title = "Facebook";
+        return cb(null, userProfile)
+    }
+));
+
+//authenticate Facebook request 
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/error' }),
+    function (req, res) {
+        // Successful authentication
+        res.redirect('/success');
+    }
+)
